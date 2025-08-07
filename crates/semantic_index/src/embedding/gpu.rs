@@ -13,7 +13,7 @@ use tokenizers::Tokenizer;
 
 use crate::embedding::{Embedding, EmbeddingProvider, TextToEmbed};
 
-const MODEL_ID: &str = "Alibaba-NLP/gte-Qwen2-1.5B-instruct";
+const MODEL_ID: &str = "Qwen/Qwen3-Embedding-0.6B";
 const EMBEDDING_DIM: usize = 1536;
 const MAX_SEQUENCE_LENGTH: usize = 8192;
 
@@ -46,7 +46,7 @@ impl Default for GpuEmbeddingSettings {
         Self {
             model_path: None,
             device: GpuDevice::Auto,
-            batch_size: 32,
+            batch_size: 8,
             quantization: QuantizationType::Int8,
         }
     }

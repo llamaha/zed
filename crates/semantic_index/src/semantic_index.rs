@@ -40,6 +40,11 @@ pub struct SemanticDb {
 
 impl Global for SemanticDb {}
 
+pub fn init(cx: &mut App) {
+    use ::settings::Settings;
+    SemanticIndexSettings::register(cx);
+}
+
 impl SemanticDb {
     pub fn is_available(cx: &App) -> bool {
         cx.has_global::<SemanticDb>()

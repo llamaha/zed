@@ -18,6 +18,8 @@ Learn how to get started using AI with Zed and all its capabilities.
 
 - [Tools](./tools.md): Explore the tools that enable agentic capabilities.
 
+- [Semantic Search](./semantic-search.md): Learn about AI-powered code search that understands natural language queries.
+
 - [Model Context Protocol](./mcp.md): Learn about how to install and configure MCP servers.
 
 - [Inline Assistant](./inline-assistant.md): Discover how to use the agent to power inline transformations directly within a file or terminal.

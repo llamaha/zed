@@ -3417,6 +3417,114 @@ Run the `theme selector: toggle` action in the command palette to see a current 
 
 Visit [the Configuration page](./ai/configuration.md) under the AI section to learn more about all the agent-related settings.
 
+## Semantic Index
+
+- Description: Configures semantic code indexing for intelligent code search. When enabled, Zed can search for code based on meaning rather than just keywords.
+- Setting: `semantic_index`
+- Default: `{ "enabled": true, "gpu_embeddings": null }`
+
+**Note**: GPU embeddings is an opt-in feature that requires additional setup and building Zed with the `gpu-embeddings` feature flag.
+
+### Basic Configuration
+
+Semantic indexing is enabled by default with cloud-based embeddings:
+
+```json
+{
+  "semantic_index": {
+    "enabled": true
+  }
+}
+```
+
+### GPU Embeddings Configuration
+
+For local GPU-accelerated embeddings using Qwen3-Embed-0.6 with INT8 quantization (opt-in, requires GPU and special build):
+
+```json
+{
+  "semantic_index": {
+    "enabled": true,
+    "gpu_embeddings": {
+      "enabled": true,
+      "model_path": null,
+      "device": "auto",
+      "batch_size": 8,
+      "quantization": "int8",
+      "qdrant_url": "http://localhost:6334"
+    }
+  }
+}
+```
+
+**GPU Embedding Options**:
+
+- `enabled`: Enable GPU-accelerated embeddings. Default: `false`
+- `model_path`: Path to locally stored Qwen3-Embed-0.6 model files. If `null`, downloads from Hugging Face. Default: `null`
+- `device`: GPU device selection. Options: `"auto"`, `"cuda:0"`, `"metal"`, `"cpu"`. Default: `"auto"`
+- `batch_size`: Number of texts to process in parallel. Default: `8`
+- `quantization`: Model quantization type. Options: `"int8"`, `"none"`. Default: `"int8"`
+- `qdrant_url`: URL of the Qdrant vector database server. Default: `"http://localhost:6334"`
+
+### Using Qwen3-Embed-0.6
+
+The GPU embeddings feature uses the [Qwen3-Embed-0.6](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B) model, which provides:
+
+- **Embedding dimension**: 1536
+- **Context length**: 8192 tokens
+- **INT8 quantization**: Reduces memory usage by ~75% with minimal quality loss
+- **Performance**: ~1000 embeddings/second on RTX 3080
+
+To use a locally downloaded model:
+
+```json
+{
+  "semantic_index": {
+    "gpu_embeddings": {
+      "enabled": true,
+      "model_path": "/path/to/Qwen3-Embedding-0.6B"
+    }
+  }
+}
+```
+
+### Requirements for GPU Embeddings
+
+1. **Build Requirements**:
+   - Build Zed with: `cargo build --release -p zed --features gpu-embeddings`
+   - CUDA 11.8+ (for NVIDIA GPUs) or Metal (for Apple Silicon)
+   - Sufficient GPU memory: ~2GB with INT8 quantization
+
+2. **Qdrant Installation**:
+   ```bash
+   docker run -p 6333:6333 -p 6334:6334 \
+     -v $(pwd)/qdrant_storage:/qdrant/storage:z \
+     qdrant/qdrant
+   ```
+
+3. **Model Download**:
+   - The Qwen3-Embed-0.6 model is downloaded automatically on first use
+   - Stored in `~/.cache/zed/models/Qwen--Qwen3-Embedding-0.6B/`
+   - Size: ~1.5GB for INT8 quantized weights
+
+### Example Complete Configuration
+
+```json
+{
+  "semantic_index": {
+    "enabled": true,
+    "gpu_embeddings": {
+      "enabled": true,
+      "model_path": null,
+      "device": "auto",
+      "batch_size": 8,
+      "quantization": "int8",
+      "qdrant_url": "http://localhost:6334"
+    }
+  }
+}
+```
+
 ## Outline Panel
 
 - Description: Customize outline Panel

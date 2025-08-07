@@ -2,7 +2,7 @@ use anyhow::Result;
 use gpui::App;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use settings::{Settings, SettingsSources, VsCodeSettings};
+use settings::{SettingsSources, VsCodeSettings};
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(default)]
@@ -36,14 +36,14 @@ impl Default for GpuEmbeddingsSettings {
             enabled: false,
             model_path: None,
             device: "auto".to_string(),
-            batch_size: 32,
+            batch_size: 8,
             quantization: "int8".to_string(),
             qdrant_url: "http://localhost:6334".to_string(),
         }
     }
 }
 
-impl Settings for SemanticIndexSettings {
+impl settings::Settings for SemanticIndexSettings {
     const KEY: Option<&'static str> = Some("semantic_index");
 
     type FileContent = Self;

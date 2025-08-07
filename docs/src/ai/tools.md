@@ -36,6 +36,10 @@ Opens a file or URL with the default application associated with it on the user'
 
 Reads the content of a specified file in the project, allowing access to file contents.
 
+### `semantic_search`
+
+Searches for semantically similar code across the project using natural language queries. This tool uses AI embeddings to find code that is conceptually related to your query, even if it doesn't contain exact keyword matches. Useful for finding implementations of concepts, patterns, or functionality described in natural language.
+
 ### `thinking`
 
 Allows the Agent to work through problems, brainstorm ideas, or plan without executing actions, useful for complex problem-solving.
