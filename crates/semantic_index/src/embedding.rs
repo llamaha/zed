@@ -1,10 +1,14 @@
 mod lmstudio;
 mod ollama;
 mod open_ai;
+#[cfg(feature = "gpu-embeddings")]
+mod gpu;
 
 pub use lmstudio::*;
 pub use ollama::*;
 pub use open_ai::*;
+#[cfg(feature = "gpu-embeddings")]
+pub use gpu::*;
 use sha2::{Digest, Sha256};
 
 use anyhow::Result;

@@ -12,6 +12,9 @@ workspace = true
 [lib]
 path = "src/semantic_index.rs"
 
+[features]
+gpu-embeddings = ["candle-core", "candle-nn", "candle-transformers", "tokenizers", "safetensors", "qdrant-client"]
+
 [[example]]
 name = "index"
 path = "examples/index.rs"
@@ -19,10 +22,13 @@ crate-type = ["bin"]
 
 [dependencies]
 anyhow.workspace = true
+async-trait.workspace = true
 arrayvec.workspace = true
 blake3.workspace = true
 client.workspace = true
 clock.workspace = true
+dirs.workspace = true
+code-parsers = { path = "../code-parsers" }
 collections.workspace = true
 feature_flags.workspace = true
 fs.workspace = true
@@ -37,6 +43,7 @@ log.workspace = true
 open_ai.workspace = true
 parking_lot.workspace = true
 project.workspace = true
+schemars.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 settings.workspace = true
@@ -51,6 +58,23 @@ util.workspace = true
 workspace.workspace = true
 worktree.workspace = true
 workspace-hack.workspace = true
+
+# GPU embeddings dependencies (optional)
+[target.'cfg(not(target_os = "macos"))'.dependencies]
+candle-core = { version = "0.9", features = ["cuda"], optional = true }
+candle-nn = { version = "0.9", optional = true }
+candle-transformers = { version = "0.9", optional = true }
+tokenizers = { version = "0.20", optional = true }
+safetensors = { version = "0.4", optional = true }
+qdrant-client = { version = "1.10", optional = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+candle-core = { version = "0.9", features = ["metal"], optional = true }
+candle-nn = { version = "0.9", optional = true }
+candle-transformers = { version = "0.9", optional = true }
+tokenizers = { version = "0.20", optional = true }
+safetensors = { version = "0.4", optional = true }
+qdrant-client = { version = "1.10", optional = true }
 
 [dev-dependencies]
 client = { workspace = true, features = ["test-support"] }

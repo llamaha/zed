@@ -14,6 +14,8 @@ mod open_tool;
 mod project_notifications_tool;
 mod read_file_tool;
 mod schema;
+#[cfg(feature = "semantic-search")]
+mod semantic_search_tool;
 mod templates;
 mod terminal_tool;
 mod thinking_tool;
@@ -39,6 +41,8 @@ use crate::fetch_tool::FetchTool;
 use crate::find_path_tool::FindPathTool;
 use crate::list_directory_tool::ListDirectoryTool;
 use crate::now_tool::NowTool;
+#[cfg(feature = "semantic-search")]
+use crate::semantic_search_tool::SemanticSearchTool;
 use crate::thinking_tool::ThinkingTool;
 
 pub use edit_file_tool::{EditFileMode, EditFileToolInput};
@@ -69,6 +73,11 @@ pub fn init(http_client: Arc<HttpClientWithUrl>, cx: &mut App) {
     registry.register_tool(ThinkingTool);
     registry.register_tool(FetchTool::new(http_client));
     registry.register_tool(EditFileTool);
+    
+    #[cfg(feature = "semantic-search")]
+    if semantic_index::SemanticDb::is_available(cx) {
+        registry.register_tool(SemanticSearchTool);
+    }
 
     register_web_search_tool(&LanguageModelRegistry::global(cx), cx);
     cx.subscribe(

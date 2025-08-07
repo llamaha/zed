@@ -1,12 +1,16 @@
 mod chunking;
+mod chunking_v2;
 mod embedding;
 mod embedding_index;
 mod indexing;
 mod project_index;
 mod project_index_debug_view;
+mod settings;
 mod summary_backlog;
 mod summary_index;
 mod worktree_index;
+#[cfg(feature = "gpu-embeddings")]
+mod vector_store;
 
 use anyhow::{Context as _, Result};
 use collections::HashMap;
@@ -25,6 +29,7 @@ use workspace::Workspace;
 pub use embedding::*;
 pub use project_index::{LoadedSearchResult, ProjectIndex, SearchResult, Status};
 pub use project_index_debug_view::ProjectIndexDebugView;
+pub use settings::SemanticIndexSettings;
 pub use summary_index::FileSummary;
 
 pub struct SemanticDb {
@@ -36,6 +41,10 @@ pub struct SemanticDb {
 impl Global for SemanticDb {}
 
 impl SemanticDb {
+    pub fn is_available(cx: &App) -> bool {
+        cx.has_global::<SemanticDb>()
+    }
+
     pub async fn new(
         db_path: PathBuf,
         embedding_provider: Arc<dyn EmbeddingProvider>,
